@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="@124" Category="CodeSchema_ProjectItem" Bounds="319.809112144078,89.7269602842208,143.418000077079,25.998000077079" FilePath="$(VsSolution)\ocr_2\featureextractor.h" Label="featureextractor.h" UseManualLocation="True" />
+    <Node Id="@138" Category="CodeSchema_ProjectItem" Bounds="90.0978274557637,89.7206455850367,119.524666743746,25.998000077079" FilePath="$(VsSolution)\ocr_2\sheet2chars.h" Label="sheet2chars.h" UseManualLocation="True" />
+    <Node Id="@146" Category="CodeSchema_ProjectItem" Bounds="310.343084515497,-72.6263087606664,91.6913334104124,25.998000077079" FilePath="$(VsSolution)\ocr_2\predict.h" Label="predict.h" UseManualLocation="True" />
+    <Node Id="@148" Category="CodeSchema_ProjectItem" Bounds="172.200934450393,-70.5188334799047,101.234666743746,25.998000077079" FilePath="$(VsSolution)\ocr_2\segment.h" Label="segment.h" UseManualLocation="True" />
+    <Node Id="@196" Category="CodeSchema_ProjectItem" Bounds="509.524402467971,204.804467303264,120.134666743746,25.998000077079" FilePath="$(VsSolution)\ocr_2\linearsvm.cpp" Label="linearsvm.cpp" UseManualLocation="True" />
+    <Node Id="@198" Category="CodeSchema_ProjectItem" Bounds="264.964083254104,-153.585182509446,93.6946667437458,25.998000077079" FilePath="$(VsSolution)\ocr_2\main.cpp" Label="main.cpp" UseManualLocation="True" />
+    <Node Id="@2" Category="CodeSchema_PoundIncludeFile" Bounds="19.0978126525879,-193.585282509446,675.129299163818,452.542238317523" FilePath="$(VsSolution)\ocr_2\ocr_2.vcxproj" Group="Expanded" Label="ocr_2.vcxproj" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@200" Category="CodeSchema_ProjectItem" Bounds="322.153078411981,212.833779437053,157.371333410412,25.998000077079" FilePath="$(VsSolution)\ocr_2\featureextractor.cpp" Label="featureextractor.cpp" UseManualLocation="True" />
+    <Node Id="@202" Category="CodeSchema_ProjectItem" Bounds="81.8781111675152,212.958855730998,133.478000077079,25.998000077079" FilePath="$(VsSolution)\ocr_2\sheet2chars.cpp" Label="sheet2chars.cpp" UseManualLocation="True" />
+    <Node Id="@204" Category="CodeSchema_ProjectItem" Bounds="397.036965334182,5.371829667068,105.644666743746,25.998000077079" FilePath="$(VsSolution)\ocr_2\predict.cpp" Label="predict.cpp" UseManualLocation="True" />
+    <Node Id="@206" Category="CodeSchema_ProjectItem" Bounds="124.454698386753,21.449538865066,115.188000077079,25.998000077079" FilePath="$(VsSolution)\ocr_2\segment.cpp" Label="segment.cpp" UseManualLocation="True" />
+    <Node Id="@86" Category="CodeSchema_ProjectItem" Bounds="494.22711283581,87.5662571573024,106.181333410412,25.998000077079" FilePath="$(VsSolution)\ocr_2\linearsvm.h" Label="linearsvm.h" UseManualLocation="True" />
+    <Node Id="分割接口" Category="Comment" Bounds="52.6142613474528,-67.7905641065611,78.5866666666667,25.24" Label="1 分割接口" UseManualLocation="True">
+      <Category Ref="Category1" />
+    </Node>
+    <Node Id="分类识别业务" Category="Comment" Bounds="582.227111816406,143.564357234381,92,25.24" UseManualLocation="True">
+      <Category Ref="Category2" />
+    </Node>
+    <Node Id="化验单分割业务" Category="Comment" Bounds="39.0978126525879,157.718755730998,104,25.24" UseManualLocation="True">
+      <Category Ref="Category2" />
+      <Category Ref="Category8" />
+    </Node>
+    <Node Id="抽取gabor特征业务" Category="Comment" Bounds="252.80911722819,147.593661738776,126.186666666667,25.24" UseManualLocation="True">
+      <Category Ref="Category2" />
+    </Node>
+    <Node Id="识别接口" Category="Comment" Bounds="440.343126017253,-70.8664112001542,78.5866666666666,25.24" Label="2 识别接口" UseManualLocation="True">
+      <Category Ref="Category1" />
+    </Node>
+  </Nodes>
+  <Links>
+    <Link Source="@196" Target="@86" Category="PoundInclude" Bounds="551.467295927277,122.406095328502,15.6547744474726,82.3983719747612" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@198" Target="@146" Category="PoundInclude" Bounds="318.936774815829,-127.587182432367,25.8005837510376,47.0687620520875" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@198" Target="@148" Category="PoundInclude" Bounds="243.324022295184,-127.587182432367,54.5609131715236,50.9272446002864" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@2" Target="@124" Category="Contains" />
+    <Link Source="@2" Target="@138" Category="Contains" />
+    <Link Source="@2" Target="@146" Category="Contains" />
+    <Link Source="@2" Target="@148" Category="Contains" />
+    <Link Source="@2" Target="@196" Category="Contains" />
+    <Link Source="@2" Target="@198" Category="Contains" />
+    <Link Source="@2" Target="@200" Category="Contains" />
+    <Link Source="@2" Target="@202" Category="Contains" />
+    <Link Source="@2" Target="@204" Category="Contains" />
+    <Link Source="@2" Target="@206" Category="Contains" />
+    <Link Source="@2" Target="@86" Category="Contains" />
+    <Link Source="@2" Target="分割接口" Category="Contains" />
+    <Link Source="@2" Target="分类识别业务" Category="Contains" />
+    <Link Source="@2" Target="化验单分割业务" Category="Contains" />
+    <Link Source="@2" Target="抽取gabor特征业务" Category="Contains" />
+    <Link Source="@2" Target="识别接口" Category="Contains" />
+    <Link Source="@200" Target="@124" Category="PoundInclude" Bounds="393.181750368763,124.699275520908,6.67281768407179,88.1345039161448" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@202" Target="@138" Category="PoundInclude" Bounds="148.748226402062,124.718187872915,0.890044805577958,88.2406678580835" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@202" Target="@146" Category="PoundInclude" Bounds="158.0651641585,-39.3481483393459,183.384100904837,252.307004070344" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@204" Target="@124" Category="PoundInclude" Bounds="405.627820120851,31.369829744147,35.2411886014388,50.9549984278057" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@204" Target="@146" Category="PoundInclude" Bounds="378.715874254618,-40.8692923770994,55.5324948200808,46.2411220441674" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@204" Target="@86" Category="PoundInclude" Bounds="465.272299742897,31.369829744147,59.7525972539949,50.3940804357873" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@206" Target="@138" Category="PoundInclude" Bounds="159.827066922208,47.447538942145,16.0928484559803,34.1325408472904" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="@206" Target="@148" Category="PoundInclude" Bounds="187.811153719974,-36.2930381982676,25.5972780937484,57.7425770633336" NativeProvider_CodeItemIds="Microsoft.VisualStudio.Progression.SmallList`1[System.Int64]" />
+    <Link Source="分割接口" Target="@148" Bounds="131.200928014119,-56.4499911892722,32.0014552853234,0.574285012572389" />
+    <Link Source="分类识别业务" Target="@86" Bounds="573.644114945775,118.662639059551,36.2246312622717,24.9017181748305" />
+    <Link Source="化验单分割业务" Target="@138" Bounds="102.064843020054,122.511929542938,30.5954304236567,35.2068261880599" />
+    <Link Source="抽取gabor特征业务" Target="@124" Bounds="332.50199491889,121.171898784192,34.753504450431,26.4217629545836" />
+    <Link Source="识别接口" Target="@146" Bounds="411.03385489972,-59.0138063014663,29.3092711175327,0.327856227305922" />
+  </Links>
+  <Categories>
+    <Category Id="Category1" Label="类别 1" Background="#FFE51400" IsTag="True" />
+    <Category Id="Category2" Label="类别 2" Background="#FF339933" IsTag="True" />
+    <Category Id="Category8" Label="类别 8" Background="#FF44CCCC" IsTag="True" />
+    <Category Id="CodeSchema_PoundIncludeFile" Label="C++ 项目文件" BasedOn="File" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="C++ 项目文件" />
+    <Category Id="CodeSchema_ProjectItem" Label="项目项" BasedOn="File" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Type" Icon="File" NavigationActionLabel="项目项" />
+    <Category Id="Comment" Label="注释" Description="表示在图表中用户定义的注释" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="注释" />
+    <Category Id="Contains" Label="包含" Description="链接的源是否包含目标对象" CanBeDataDriven="False" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="包含者" IsContainment="True" OutgoingActionLabel="包含" />
+    <Category Id="File" Label="文件" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="File" NavigationActionLabel="文件" />
+    <Category Id="PoundInclude" Label="#include" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="#include 调用方" OutgoingActionLabel="#include" />
+  </Categories>
+  <Properties>
+    <Property Id="Background" Label="背景" Description="背景色" DataType="System.Windows.Media.Brush" />
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="CanBeDataDriven" Label="CanBeDataDriven" Description="CanBeDataDriven" DataType="System.Boolean" />
+    <Property Id="CanLinkedNodesBeDataDriven" Label="CanLinkedNodesBeDataDriven" Description="CanLinkedNodesBeDataDriven" DataType="System.Boolean" />
+    <Property Id="DefaultAction" Label="DefaultAction" Description="DefaultAction" DataType="System.String" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="FilePath" Label="文件路径" Description="文件路径" DataType="System.String" />
+    <Property Id="Group" Label="组" Description="将节点显示为组" DataType="Microsoft.VisualStudio.GraphModel.GraphGroupStyle" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="Icon" Label="图标" Description="图标" DataType="System.String" />
+    <Property Id="IncomingActionLabel" Label="IncomingActionLabel" Description="IncomingActionLabel" DataType="System.String" />
+    <Property Id="IsContainment" DataType="System.Boolean" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="IsProviderRoot" Label="IsProviderRoot" Description="IsProviderRoot" DataType="System.Boolean" />
+    <Property Id="IsTag" DataType="System.Boolean" />
+    <Property Id="Label" Label="标签" Description="可批注对象的可显示标签" DataType="System.String" />
+    <Property Id="Language" Label="语言" Description="语言" DataType="System.String" />
+    <Property Id="NativeProvider_CodeItemIds" Label="NodeIds" Description="NodeIds" DataType="System.String" />
+    <Property Id="NavigationActionLabel" Label="NavigationActionLabel" Description="NavigationActionLabel" DataType="System.String" />
+    <Property Id="OutgoingActionLabel" Label="OutgoingActionLabel" Description="OutgoingActionLabel" DataType="System.String" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="UseManualLocation" DataType="System.Boolean" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+  </Properties>
+  <QualifiedNames>
+    <Name Id="Assembly" Label="程序集" ValueType="Uri" />
+    <Name Id="File" Label="文件" ValueType="Uri" />
+  </QualifiedNames>
+  <IdentifierAliases>
+    <Alias n="1" Uri="Assembly=$(VsSolutionUri)/ocr_2/ocr_2.vcxproj" />
+    <Alias n="2" Id="(@1)" />
+    <Alias n="85" Uri="File=$(VsSolutionUri)/ocr_2/LinearSVM.h" />
+    <Alias n="86" Id="(@1 @85)" />
+    <Alias n="123" Uri="File=$(VsSolutionUri)/ocr_2/FeatureExtractor.h" />
+    <Alias n="124" Id="(@1 @123)" />
+    <Alias n="137" Uri="File=$(VsSolutionUri)/ocr_2/sheet2Chars.h" />
+    <Alias n="138" Id="(@1 @137)" />
+    <Alias n="145" Uri="File=$(VsSolutionUri)/ocr_2/predict.h" />
+    <Alias n="146" Id="(@1 @145)" />
+    <Alias n="147" Uri="File=$(VsSolutionUri)/ocr_2/segment.h" />
+    <Alias n="148" Id="(@1 @147)" />
+    <Alias n="195" Uri="File=$(VsSolutionUri)/ocr_2/LinearSVM.cpp" />
+    <Alias n="196" Id="(@1 @195)" />
+    <Alias n="197" Uri="File=$(VsSolutionUri)/ocr_2/main.cpp" />
+    <Alias n="198" Id="(@1 @197)" />
+    <Alias n="199" Uri="File=$(VsSolutionUri)/ocr_2/FeatureExtractor.cpp" />
+    <Alias n="200" Id="(@1 @199)" />
+    <Alias n="201" Uri="File=$(VsSolutionUri)/ocr_2/sheet2Chars.cpp" />
+    <Alias n="202" Id="(@1 @201)" />
+    <Alias n="203" Uri="File=$(VsSolutionUri)/ocr_2/predict.cpp" />
+    <Alias n="204" Id="(@1 @203)" />
+    <Alias n="205" Uri="File=$(VsSolutionUri)/ocr_2/segment.cpp" />
+    <Alias n="206" Id="(@1 @205)" />
+  </IdentifierAliases>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="类别 2" ValueLabel="具有类别">
+      <Condition Expression="HasCategory('Category2')" />
+      <Setter Property="Background" Value="#FF339933" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="类别 8" ValueLabel="具有类别">
+      <Condition Expression="HasCategory('Category8')" />
+      <Setter Property="Background" Value="#FF44CCCC" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="类别 1" ValueLabel="具有类别">
+      <Condition Expression="HasCategory('Category1')" />
+      <Setter Property="Background" Value="#FFE51400" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="C++ 项目文件" ValueLabel="具有类别">
+      <Condition Expression="HasCategory('CodeSchema_PoundIncludeFile')" />
+      <Setter Property="Background" Value="#FFEFEFEF" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="外部" ValueLabel="具有类别">
+      <Condition Expression="HasCategory('Externals')" />
+      <Setter Property="Background" Value="#FFA08080" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="源文件" ValueLabel="具有类别">
+      <Condition Expression="HasCategory('CodeSchema_ProjectItem')" />
+      <Setter Property="Background" Value="#FFC0C0C0" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="#include 组" ValueLabel="具有类别">
+      <Condition Expression="HasCategory('CodeSchema_PoundIncludeGroup')" />
+      <Setter Property="Background" Value="#FFEFEFEF" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="注释" ValueLabel="包含注释">
+      <Condition Expression="HasCategory('Comment')" />
+      <Setter Property="Background" Value="#FFFFFACD" />
+      <Setter Property="Stroke" Value="#FFE5C365" />
+      <Setter Property="StrokeThickness" Value="1" />
+      <Setter Property="NodeRadius" Value="2" />
+      <Setter Property="MaxWidth" Value="250" />
+    </Style>
+  </Styles>
+  <Paths>
+    <Path Id="ProgramFiles" Value="C:\Program Files (x86)" />
+    <Path Id="VsInstallDir" Value="C:\Program Files (x86)\Microsoft Visual Studio 12.0" />
+    <Path Id="VsSolution" Value="D:\ocr" />
+    <Path Id="VsSolutionUri" Value="file:///D:/ocr" />
+  </Paths>
+</DirectedGraph>
