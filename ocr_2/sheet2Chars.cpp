@@ -1,7 +1,7 @@
 #include"sheet2Chars.h"
 #include"predict.h"
 using namespace cv;
-
+//#define SAVEVMCHAR
 /*
 * private 过期
 *
@@ -49,8 +49,8 @@ void rotateImage(cv::Mat& image, float angle);
 * 作用：筛选直线 （第一步：删除不合格的直线，第二步，合并直线）
 * author: zhangzhen
 */
-void filtLines(vector<Vec4f>& lines_std, vector<Vec4f>& lines);
-
+//void filtLines(vector<Vec4f>& lines_std, vector<Vec4f>& lines);
+void filtLines(vector<Vec4f>& lines_std, vector<Vec4f>& finallines, float disth = 30.0f, float combineth = 15.0f);
 /*
 *
 * private
@@ -90,6 +90,8 @@ int cut2Lines(const cv::Mat& vmroiitem, vector<cv::Mat>& vmlines);
 int cut2Chars(const cv::Mat& vmlines, vector<cv::Mat>& vmchars);
 
 
+int pos = 0;//记录中心线坐标
+
 int cutBody(const char * imagepath, cv::Mat &body)
 {
 
@@ -111,6 +113,7 @@ int cutBody(const char * imagepath, cv::Mat &body)
 	detectLines(imagenormal, lines_std);
 	//主方向 angle
 	float angle = countDirection(lines_std);
+	//angle *= 2;
 	//旋转图像
 	rotateImage(image, angle);
 	rotateImage(imagenormal, angle);
@@ -124,11 +127,16 @@ int cutBody(const char * imagepath, cv::Mat &body)
 	{
 		return -1;
 	}
+	
 	int rowrangestart = (int)(min(lines[ind - 1][1], lines[ind - 1][3])*normalscale);
 	int rowrangeend = (int)(min(lines[ind + 1][1], lines[ind + 1][3])*normalscale);
 	int colrangestart = (int)(min(lines[ind - 1][0] , lines[ind + 1][0]) * normalscale);
 	int colrangeend = (int)(max(lines[ind - 1][2] , lines[ind + 1][2])  * normalscale);
 	body = image.rowRange(rowrangestart, rowrangeend).colRange(colrangestart, colrangeend);
+
+
+	int centerrow = (int)(min(lines[ind][1], lines[ind][3])*normalscale);
+	pos = centerrow - rowrangestart;
 	return 0;
 
 	/*
@@ -496,7 +504,18 @@ int analysisLayout(const cv::Mat& body, vector<cv::Mat>& vmitems)
 	return 0;
 }
 
-
+bool isROIItem(std::vector<int>& viLabel)
+{
+	char num2str[64] = { 0 };
+	for (int i = 0; i < viLabel.size(); i++)
+	{
+		sprintf(num2str, "%s%d", num2str, viLabel[i]);
+	}
+	string str(num2str);
+	if (str.find("56") != string::npos || str.find("78") != string::npos || str.find("1112") != string::npos)
+		return true;
+	return false;
+}
 int getROIItems(const vector<cv::Mat>& vmitems, vector<cv::Mat>& vmroiitems)
 {
 	//调用
@@ -506,27 +525,82 @@ int getROIItems(const vector<cv::Mat>& vmitems, vector<cv::Mat>& vmroiitems)
 
 	for (int i = 0; i < vmitems.size(); i++)
 	{
-		vector<cv::Mat> vmlines;
-		cut2Lines(vmitems[i], vmlines);
+		//vector<cv::Mat> vmlines;
+
+		cv::Mat header = vmitems[i].rowRange(0, pos+2); //pos 全局变量，在cutbody时记录值
+
+		//精确定位表头行,原理等同于切割行，但是具体参数一样
+		//Sobel(header, header, CV_8U, 1, 0, 3, 1, 0);
+
+		const float SIGMA_DETA_FACTOR = 0.3;
+		int rows = header.rows;
+		int cols = header.cols;
+		vector<float> feature(rows);
+		for (int ir = 0; ir < rows; ir++)
+		{
+			cv::Mat tempdst = header.row(ir);
+			cv::Scalar meanv, stdDev;
+			cv::meanStdDev(tempdst, meanv, stdDev);
+			feature[ir] = (float)(min(18.0, meanv[0] / (stdDev[0] + 1)));
+		}
+		Mat featureMat(feature);
+		cv::Scalar meanv, stdDev;
+		cv::meanStdDev(featureMat, meanv, stdDev);
+		float thd = (float)(meanv[0] + SIGMA_DETA_FACTOR*(stdDev[0]));
+		featureMat = featureMat > thd;
+
+		int up = 0, down = 0;
+		int half = rows / 2;
+		while (half >= 0 && featureMat.ptr<uchar>(half)[0] == 0)
+		{
+			half--;
+		}
+		up = half;// max(0, half - 1);
+		half = rows / 2;
+		while (half < rows && featureMat.ptr<uchar>(half)[0] == 0)
+		{
+			half++;
+		}
+		down = min(rows, half + 1);	
+		if ((down - up + 3) < rows / 2 || (down - up + 1)>rows) //没有文字
+			continue;
+		std::vector<cv::Mat> vmhead;
+		std::vector<cv::Mat> vMChar;
+		std::vector<int> viLabel;
+		cut2Chars(header.rowRange(up,down), vMChar);
+		predict(vMChar, viLabel);
+
+#ifdef SAVEVMCHAR
+		for (int i=0;i<vMChar.size();i++)
+		{
+			char impath[64] = { 0 };
+			sprintf(impath, "../Output/%d.png", i + 100);
+			imwrite(impath, vMChar[i]);
+		}
+		
+#endif
+		
+		if (isROIItem(viLabel))
+			vmroiitems.push_back(vmitems[i].rowRange(pos + 2, vmitems[i].rows));
 	}
 
 
 	//检验item svm
-	std::vector<cv::Mat> vM;
-	std::vector<int> vi;
-	cv::Mat m1 = imread("..\\Input\\1ce.png");
-	cv::Mat m2 = imread("..\\Input\\2mu.png");
-	cv::Mat m3 = imread("..\\Input\\3dai.png");
-	cv::Mat m4 = imread("..\\Input\\4hao.png");
-	cv::Mat m5 = imread("..\\Input\\5xiang.png");
-	cv::Mat m6 = imread("..\\Input\\6mu.png");
-	vM.push_back(m1);
-	vM.push_back(m2);
-	vM.push_back(m3);
-	vM.push_back(m4);
-	vM.push_back(m5);
-	vM.push_back(m6);
-	predict(vM, vi);
+	//std::vector<cv::Mat> vM;
+	//std::vector<int> vi;
+	//cv::Mat m1 = imread("..\\Input\\1ce.png");
+	//cv::Mat m2 = imread("..\\Input\\2mu.png");
+	//cv::Mat m3 = imread("..\\Input\\3dai.png");
+	//cv::Mat m4 = imread("..\\Input\\4hao.png");
+	//cv::Mat m5 = imread("..\\Input\\5xiang.png");
+	//cv::Mat m6 = imread("..\\Input\\6mu.png");
+	//vM.push_back(m1);
+	//vM.push_back(m2);
+	//vM.push_back(m3);
+	//vM.push_back(m4);
+	//vM.push_back(m5);
+	//vM.push_back(m6);
+	//predict(vM, vi);
 
 	return 0;
 }
@@ -556,7 +630,11 @@ int segmentChars(const vector<cv::Mat>& vmroiitems, vector<vector<cv::Mat>> &vvm
 	//调用
 	//int predict(const cv::Mat& charMat);
 	//识别单个字。
-
+	if (vmroiitems.size() % 2 == 1)
+	{
+		return -1;
+	}
+	int flag = -1;
 	for (size_t i = 1; i < vmroiitems.size(); i+=2)
 	{
 		vector<cv::Mat> vmlines;//测试项目
@@ -565,8 +643,9 @@ int segmentChars(const vector<cv::Mat>& vmroiitems, vector<vector<cv::Mat>> &vvm
 		cut2Lines(vmroiitems[i], vmlines2);
 		if (vmlines.size() != vmlines2.size())//测试项目和结果行数不一致
 		{
-			return -1;
+			return flag;
 		}
+		flag = 0;
 		for (size_t iline = 0; iline < vmlines.size(); iline++)
 		{
 			vector<cv::Mat> vmtestchars;//测试项目行（S）
@@ -623,10 +702,11 @@ void detectLines(const cv::Mat& image, vector<Vec4f>& lines_std)
 float countDirection(vector<Vec4f>& lines_std)
 {
 	const float DISTH = 50.f;
-	const float DIFFANGLE = 0.5;//主方向阈值
+	const float DIFFANGLE = 0.2;//主方向阈值
 	float kangle = 0;
 	int kcount = 0;
-	for (size_t i = 0; i < lines_std.size(); i++)
+	// 只统计在body前2/3区域的直线，这样是否合理？对目前的图片有作用。
+	for (size_t i = lines_std.size()*2/3; i > 0; i--)
 	{
 		float f1x = lines_std[i][0];
 		float f1y = lines_std[i][1];
@@ -663,10 +743,10 @@ void rotateImage(cv::Mat& image, float angle)
 	warpAffine(image, image, rotateMat, image.size(), 1, 0, cvScalarAll(255));
 }
 
-void filtLines(vector<Vec4f>& lines_std, vector<Vec4f>& finallines)
+void filtLines(vector<Vec4f>& lines_std, vector<Vec4f>& finallines, float disth, float combineth)
 {
 	vector<Vec4f> lines_long;
-	const float DIS = 30.f;
+	const float DIS = disth;
 	const float ANG = tanf(2.0f*CV_PI / 180);
 	for (size_t i = 0; i < lines_std.size(); i++)
 	{
@@ -687,7 +767,7 @@ void filtLines(vector<Vec4f>& lines_std, vector<Vec4f>& finallines)
 		}
 
 	}
-	const float COMBINETH = 15.0f;
+	const float COMBINETH = combineth;
 	vector<bool>flagvisit(lines_long.size(), false);
 
 	for (int i = 0; i < lines_long.size();)
@@ -822,28 +902,156 @@ int Yen(double *daHistogram,int NUM_GRAY)
 
 int cut2Lines(const cv::Mat& vmroiitem, vector<cv::Mat>& vmlines)
 {
-	const float SIGMA_DETA_FACTOR = 0.3;
-	const int MEDIANBLUR_SIZE = 9;
+	const float SIGMA_DETA_FACTOR = 0.0;
+	const int MEDIANBLUR_SIZE = 5;
+	const float FEATHRETH = 30.0;
 	int rows = vmroiitem.rows;
 	int cols = vmroiitem.cols;
 	vector<float> feature(rows);
+	vector<float> tfeature;
+	//float maxfeature = 0.0f;
 	for (int ir = 0; ir < rows; ir++)
 	{
 		cv::Mat tempdst = vmroiitem.row(ir);
 		cv::Scalar meanv, stdDev;
 		cv::meanStdDev(tempdst, meanv, stdDev);
-		feature[ir] = (float)(min(30.0, meanv[0] / (stdDev[0] + 1)));
-	} 
+		feature[ir] = (float)(min(25.0, meanv[0] / (stdDev[0] + 1)));
+		//maxfeature = max(maxfeature, feature[ir]);
+		//float f = meanv[0] / (stdDev[0] + 1);
+		//if (f<FEATHRETH)
+		//{
+		//	feature[ir] = f;
+		//	tfeature.push_back(f);
+		//}
+		//else
+		//{
+		//	feature[ir] = FEATHRETH;
+		//}
+	}
+	//for (int i = 0; i < feature.size(); i++)
+	//{
+	//	if (maxfeature - feature[i] >= 5.0f)
+	//	{
+	//		tfeature.push_back(feature[i]);
+	//	}
+	//}
 	Mat featureMat(feature);
+	//Mat tfeatureMat(tfeature);
 	cv::Scalar meanv, stdDev;
 	cv::meanStdDev(featureMat, meanv, stdDev);
 	float thd = (float)(meanv[0] + SIGMA_DETA_FACTOR*(stdDev[0]));
 	featureMat = featureMat > thd;
-	cv::medianBlur(featureMat, featureMat, MEDIANBLUR_SIZE);
+	//cv::medianBlur(featureMat, featureMat, MEDIANBLUR_SIZE);
+	//统计平均字宽
+	int maxcontinueblacklen = 0;
+	int tmpbacklen = 0;
+	//featureMat.ptr<uchar>(ic)[0]
+	int fMros = featureMat.rows;
+	int fMcols = featureMat.cols;
+	for (int ir = 0; ir < fMros; ir++)
+	{
+		if (featureMat.ptr<uchar>(ir)[0] == 0)
+		{
+			tmpbacklen++;
+		}
+		else
+		{
+			tmpbacklen = 0;
+		}
+		maxcontinueblacklen = max(maxcontinueblacklen, tmpbacklen);
+	}
+	//int maxcontinuewhitelen = 0;
+	int tmpwhitelen = 0;
+	for (int ir = 0; ir < fMros; )
+	{
+		if (featureMat.ptr<uchar>(ir)[0] == 0)
+		{
+			int tir = min(ir + maxcontinueblacklen, fMros - 1);
+			if (tir != fMros - 1&&featureMat.ptr<uchar>(tir)[0] == 0)//跳过“短”的黑色区域
+			{
+				while (ir<fMros&&featureMat.ptr<uchar>(ir)[0] == 0)
+				{
+					ir++;
+				}
+			}
+			else//确定黑色区域边缘
+			{
+				while (tir<fMros&&featureMat.ptr<uchar>(tir)[0] == 255)
+				{
+					tir--;
+				}
+				vmlines.push_back(vmroiitem.rowRange(max(0,ir - 1), min(tir + 1,fMros)));
+				ir = tir + 1;
+			}
+			tmpwhitelen = 0;
+		}
+		else
+		{
+			ir++;
+			tmpwhitelen++;
+		}
+		//连续“白”区域
+		if (tmpwhitelen > (int)(maxcontinueblacklen*1.5))
+		{
+			break;
+		}
+	}
+
 	return 0;
 }
 
 int cut2Chars(const cv::Mat& mline, vector<cv::Mat>& vmchars)
 {
+	const float SIGMA_DETA_FACTOR = 0.75;
+	const int MEDIANBLUR_SIZE = 1;
+	int rows = mline.rows;
+	int cols = mline.cols;
+	vector<float> feature(cols);
+	for (int ic = 0; ic < cols; ic++)
+	{
+		cv::Mat tempdst = mline.col(ic);
+		cv::Scalar meanv, stdDev;
+		cv::meanStdDev(tempdst, meanv, stdDev);
+		feature[ic] = (float)(min(25.0, meanv[0] / (stdDev[0] + 1)));
+	}
+	vector<float> tfeature;
+	for (int i = 0; i<feature.size(); i++)
+	{
+		if (feature[i] < 24.5)
+			tfeature.push_back(feature[i]);
+	}
+	Mat tfeatureMat(tfeature);
+	Mat featureMat(feature);
+	cv::Scalar meanv, stdDev;
+	cv::meanStdDev(tfeatureMat, meanv, stdDev);
+	float thd = (float)(meanv[0] + SIGMA_DETA_FACTOR*(stdDev[0]));
+	featureMat = featureMat > thd;
+	cv::medianBlur(featureMat, featureMat, MEDIANBLUR_SIZE);
+	int begin = 0, end = 0;
+	for (int i = 0; i < feature.size();)
+	{
+		if (featureMat.ptr<uchar>(i)[0] == 0)
+		{
+			begin = i;
+			int j = i + 1;
+			while (j < feature.size() && featureMat.ptr<uchar>(j)[0] == 0)
+			{
+				j++;
+			}
+			end = j;
+			
+			if (end - begin>(int)(mline.rows / 4.0))//字符宽度不应太小
+			{
+				vmchars.push_back(mline.colRange(begin, end));
+			}
+			i = j + 1;
+
+			
+		}
+		else
+		{
+			i++;
+		}
+	}
 	return 0;
 }
